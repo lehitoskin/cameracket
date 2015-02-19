@@ -1,7 +1,10 @@
 #lang racket/base
 ; ioctl.rkt
 ; wrapper to ioctl.h
-(require racket/contract)
+(require racket/contract
+         (only-in ffi/unsafe
+                  ctype?
+                  ctype-sizeof))
 (provide (all-defined-out))
 
 (define _IOC_NRBITS     8)
@@ -35,17 +38,16 @@
 (define _IOC_READ      2)
 
 (define/contract (_IOC dir type nr size)
-  (-> integer? string? integer? integer? integer?)
+  (-> integer? integer? integer? integer? integer?)
   (bitwise-ior
    (arithmetic-shift dir _IOC_DIRSHIFT)
    (arithmetic-shift type _IOC_TYPESHIFT)
    (arithmetic-shift nr _IOC_NRSHIFT)
    (arithmetic-shift size _IOC_SIZESHIFT)))
 
-; length of a list a la id->list
 (define/contract (_IOC_TYPECHECK t)
-  (-> list? integer?)
-  (length t))
+  (-> ctype? integer?)
+  (ctype-sizeof t))
 
 ; used to create numbers
 (define/contract (_IO type nr)
@@ -53,29 +55,28 @@
   (let ([type (bytes-ref type 0)])
     (_IOC _IOC_NONE type nr 0)))
 (define/contract (_IOR type nr size)
-  (-> bytes? integer? list? integer?)
+  (-> bytes? integer? ctype? integer?)
   (let ([type (bytes-ref type 0)])
     (_IOC _IOC_READ type nr (_IOC_TYPECHECK size))))
 (define/contract (_IOW type nr size)
-  (-> bytes? integer? list? integer?)
+  (-> bytes? integer? ctype? integer?)
   (let ([type (bytes-ref type 0)])
     (_IOC _IOC_WRITE type nr (_IOC_TYPECHECK size))))
 (define/contract (_IOWR type nr size)
-  (-> bytes? integer? list? integer?)
+  (-> bytes? integer? ctype? integer?)
   (let ([type (bytes-ref type 0)])
     (bitwise-ior (_IOC _IOC_READ type nr (_IOC_TYPECHECK size))
                  (_IOC _IOC_WRITE type nr (_IOC_TYPECHECK size)))))
-; use a list for the struct a la id->list
 (define/contract (_IOR_BAD type nr size)
-  (-> bytes? integer? list? integer?)
+  (-> bytes? integer? ctype? integer?)
   (let ([type (bytes-ref type 0)])
     (_IOC _IOC_READ type nr (length size))))
 (define/contract (_IOW_BAD type nr size)
-  (-> bytes? integer? list? integer?)
+  (-> bytes? integer? ctype? integer?)
   (let ([type (bytes-ref type 0)])
     (_IOC _IOC_WRITE type nr (length size))))
 (define/contract (_IOWR_BAD type nr size)
-  (-> bytes? integer? list? integer?)
+  (-> bytes? integer? ctype? integer?)
   (let ([type (bytes-ref type 0)])
     (bitwise-ior (_IOC _IOC_READ type nr (length size))
                  (_IOC _IOC_WRITE type nr (length size)))))

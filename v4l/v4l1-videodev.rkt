@@ -176,29 +176,47 @@
      [count (_list io _int32 2)] ; count of lines for each frame
      [flags _uint32])
     #:malloc-mode 'atomic)
-
-#|
-TODO:
-#define VIDIOCGCAP              _IOR('v',1,struct video_capability)     /* Get capabilities */
-#define VIDIOCGCHAN             _IOWR('v',2,struct video_channel)       /* Get channel info (sources) */
-#define VIDIOCSCHAN             _IOW('v',3,struct video_channel)        /* Set channel  */
-#define VIDIOCGTUNER            _IOWR('v',4,struct video_tuner)         /* Get tuner abilities */
-#define VIDIOCSTUNER            _IOW('v',5,struct video_tuner)          /* Tune the tuner for the current channel */
-#define VIDIOCGPICT             _IOR('v',6,struct video_picture)        /* Get picture properties */
-#define VIDIOCSPICT             _IOW('v',7,struct video_picture)        /* Set picture properties */
-#define VIDIOCCAPTURE           _IOW('v',8,int)                         /* Start, end capture */
-#define VIDIOCGWIN              _IOR('v',9, struct video_window)        /* Get the video overlay window */
-#define VIDIOCSWIN              _IOW('v',10, struct video_window)       /* Set the video overlay window - passes clip list for hardware smarts , chromakey etc */
-#define VIDIOCGFBUF             _IOR('v',11, struct video_buffer)       /* Get frame buffer */
-#define VIDIOCSFBUF             _IOW('v',12, struct video_buffer)       /* Set frame buffer - root only */
-#define VIDIOCGFREQ             _IOR('v',14, unsigned long)             /* Set tuner */
-#define VIDIOCSFREQ             _IOW('v',15, unsigned long)             /* Set tuner */
-#define VIDIOCGAUDIO            _IOR('v',16, struct video_audio)        /* Get audio info */
-#define VIDIOCSAUDIO            _IOW('v',17, struct video_audio)        /* Audio source, mute etc */
-#define VIDIOCSYNC              _IOW('v',18, int)                       /* Sync with mmap grabbing */
-#define VIDIOCMCAPTURE          _IOW('v',19, struct video_mmap)         /* Grab frames */
-#define VIDIOCGMBUF             _IOR('v',20, struct video_mbuf)         /* Memory map buffer info */
-#define VIDIOCGVBIFMT           _IOR('v',28, struct vbi_format)         /* Get VBI information */
-#define VIDIOCSVBIFMT           _IOW('v',29, struct vbi_format)         /* Set VBI information */
-|#
+  
+  ; Get capabilities
+  (define VIDIOCGCAP              (_IOR #"v" 1 _video-capability))
+  ; Get channel info (sources)
+  (define VIDIOCGCHAN             (_IOWR #"v" 2 _video-channel))
+  ; Set channel
+  (define VIDIOCSCHAN             (_IOW #"v" 3 _video-channel))
+  ; Get tuner abilities
+  (define VIDIOCGTUNER            (_IOWR #"v" 4 _video-tuner))
+  ; Tune the tuner for the current channel
+  (define VIDIOCSTUNER            (_IOW #"v" 5 _video-tuner))
+  ; Get picture properties
+  (define VIDIOCGPICT             (_IOR #"v" 6 _video-picture))
+  ; Set picture properties
+  (define VIDIOCSPICT             (_IOW #"v" 7 _video-picture))
+  ; Start, end capture
+  (define VIDIOCCAPTURE           (_IOW #"v" 8 _int))
+  ; Get the video overlay window
+  (define VIDIOCGWIN              (_IOR #"v" 9 _video-window))
+  ; Set the video overlay window - passes clip list for hardware smarts , chromakey etc
+  (define VIDIOCSWIN              (_IOW #"v" 10 _video-window))
+  ; Get frame buffer
+  (define VIDIOCGFBUF             (_IOR #"v" 11 _video-buffer))
+  ; Set frame buffer - root only
+  (define VIDIOCSFBUF             (_IOW #"v" 12 _video-buffer))
+  ; Set tuner
+  (define VIDIOCGFREQ             (_IOR #"v" 14 _ulong))
+  ; Set tuner
+  (define VIDIOCSFREQ             (_IOW #"v" 15 _ulong))
+  ; Get audio info
+  (define VIDIOCGAUDIO            (_IOR #"v" 16 _video-audio))
+  ; Audio source, mute etc
+  (define VIDIOCSAUDIO            (_IOW #"v" 17 _video-audio))
+  ; Sync with mmap grabbing
+  (define VIDIOCSYNC              (_IOW #"v" 18 _int))
+  ; Grab frames
+  (define VIDIOCMCAPTURE          (_IOW #"v" 19 _video-mmap))
+  ; Memory map buffer info
+  (define VIDIOCGMBUF             (_IOR #"v" 20 _video-mbuf))
+  ; Get VBI information
+  (define VIDIOCGVBIFMT           (_IOR #"v" 28 _vbi-format))
+  ; Set VBI information
+  (define VIDIOCSVBIFMT           (_IOW #"v" 29 _vbi-format))
 )
